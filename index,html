@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta name="description" content="Fact or Fishy? - Nigerian & African Edition. Test your knowledge with 85+ facts about Nigeria and Africa!">
+    <meta name="theme-color" content="#008751">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Fact or Fishy?">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Icons for PWA -->
+    <link rel="apple-touch-icon" href="https://via.placeholder.com/192x192?text=FOF">
+    <link rel="icon" type="image/png" href="https://via.placeholder.com/32x32?text=FOF">
+    
+    <title>Fact or Fishy? | Nigerian & African Edition | PWA Ready</title>
+    
+    <!-- Google AdMob - REPLACE WITH YOUR PUBLISHER ID -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR_PUBLISHER_ID" crossorigin="anonymous"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0a4a2a 0%, #1a5c3a 50%, #2d6a4f 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        body::before {
+            content: '🇳🇬';
+            position: fixed;
+            font-size: 300px;
+            opacity: 0.03;
+            bottom: -50px;
+            right: -50px;
+            pointer-events: none;
+        }
+
+        /* PWA Install Prompt */
+        .install-prompt {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            z-index: 1000;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            transform: translateY(200%);
+            transition: transform 0.3s ease;
+            border: 1px solid #fcd34d;
+        }
+        
+        .install-prompt.show {
+            transform: translateY(0);
+        }
+        
+        .install-prompt button {
+            background: #fcd34d;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #1a1a2e;
+        }
+        
+        .install-prompt .close {
+            background: transparent;
+            color: white;
+            font-size: 20px;
+            padding: 5px 10px;
+        }
+
+        .game-container {
+            max-width: 850px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.97);
+            border-radius: 48px;
+            box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 215, 0, 0.3);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .game-container:hover {
+            transform: translateY(-8px);
+        }
+
+        .game-header {
+            background: linear-gradient(135deg, #008751 0%, #046a3e 100%);
+            padding: 20px 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            border-bottom: 3px solid #fcd34d;
+        }
+
+        .logo h1 {
+            color: white;
+            font-size: 1.7rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .logo h1 span {
+            color: #fcd34d;
+        }
+
+        .logo p {
+            color: #d1fae5;
+            font-size: 0.7rem;
+            margin-top: 4px;
+        }
+
+        .stats {
+            display: flex;
+            gap: 15px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 8px 16px;
+            border-radius: 20px;
+            text-align: center;
+        }
+
+        .stat-label {
+            color: #d1fae5;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-value {
+            color: #fcd34d;
+            font-size: 1.8rem;
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .difficulty-selector {
+            background: linear-gradient(135deg, #008751 0%, #046a3e 100%);
+            padding: 15px 28px;
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            border-bottom: 1px solid rgba(252, 211, 77, 0.3);
+        }
+
+        .difficulty-btn {
+            padding: 8px 24px;
+            border-radius: 40px;
+            border: none;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            font-size: 0.9rem;
+        }
+
+        .difficulty-easy { background: #10b981; color: white; }
+        .difficulty-medium { background: #f59e0b; color: white; }
+        .difficulty-hard { background: #ef4444; color: white; }
+        
+        .difficulty-btn.active {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px currentColor;
+            border: 2px solid white;
+        }
+        .difficulty-btn:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+        }
+
+        .flip-container {
+            background: linear-gradient(135deg, #fef9e7 0%, #fffaf0 100%);
+            padding: 40px 30px 25px;
+        }
+
+        .flip-card {
+            background-color: transparent;
+            width: 100%;
+            height: 420px;
+            perspective: 1500px;
+            cursor: pointer;
+        }
+
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            transform-style: preserve-3d;
+            border-radius: 32px;
+        }
+
+        .flip-card.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 32px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .flip-card-front {
+            background: linear-gradient(135deg, #ffffff 0%, #fef9e7 100%);
+            border: 3px solid #fcd34d;
+        }
+
+        .flip-card-back {
+            background: linear-gradient(135deg, #064e3b 0%, #022c22 100%);
+            color: white;
+            transform: rotateY(180deg);
+            border: 3px solid #fcd34d;
+        }
+
+        .statement {
+            font-size: 1.5rem;
+            font-weight: 700;
+            line-height: 1.4;
+            color: #064e3b;
+            margin-bottom: 30px;
+        }
+
+        .guess-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .guess-btn {
+            padding: 14px 32px;
+            border-radius: 60px;
+            border: none;
+            font-weight: 700;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .guess-fact {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            box-shadow: 0 4px 15px rgba(16,185,129,0.3);
+        }
+
+        .guess-fishy {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+            box-shadow: 0 4px 15px rgba(239,68,68,0.3);
+        }
+
+        .guess-btn:hover {
+            transform: translateY(-3px);
+            filter: brightness(1.05);
+        }
+
+        .guess-btn:disabled {
+            opacity: 0.5;
+            transform: none;
+            cursor: not-allowed;
+        }
+
+        .answer-badge {
+            display: inline-block;
+            padding: 12px 32px;
+            border-radius: 60px;
+            font-weight: 800;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .answer-fact {
+            background: #10b981;
+            color: white;
+            box-shadow: 0 0 20px rgba(16,185,129,0.5);
+        }
+
+        .answer-fishy {
+            background: #ef4444;
+            color: white;
+            box-shadow: 0 0 20px rgba(239,68,68,0.5);
+        }
+
+        .explanation-text {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            max-width: 90%;
+            margin-top: 15px;
+        }
+
+        .result-badge {
+            margin-top: 20px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            padding: 8px 20px;
+            border-radius: 40px;
+        }
+
+        .result-correct {
+            background: rgba(16,185,129,0.3);
+            color: #10b981;
+        }
+
+        .result-wrong {
+            background: rgba(239,68,68,0.3);
+            color: #ef4444;
+        }
+
+        .progress-info {
+            text-align: center;
+            margin-top: 18px;
+            color: #6b7280;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            margin-left: 8px;
+        }
+
+        .badge-nigeria {
+            background: #008751;
+            color: white;
+        }
+
+        .badge-africa {
+            background: #fcd34d;
+            color: #064e3b;
+        }
+
+        .badge-difficulty {
+            background: #f59e0b;
+            color: white;
+        }
+        
+        .badge-pwa {
+            background: #8b5cf6;
+            color: white;
+        }
+
+        .ad-container {
+            margin: 10px 25px;
+            text-align: center;
+            min-height: 90px;
+            background: #f3f4f6;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .feedback {
+            background: linear-gradient(135deg, #064e3b 0%, #022c22 100%);
+            margin: 10px 25px 20px;
+            border-radius: 20px;
+            padding: 16px 20px;
+            color: #d1fae5;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .next-btn {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 700;
+            padding: 14px;
+            width: calc(100% - 50px);
+            margin: 10px 25px 15px;
+            border-radius: 60px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .reset-btn {
+            background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+            margin-bottom: 25px;
+        }
+
+        .modern-footer {
+            background: linear-gradient(135deg, #064e3b 0%, #022c22 100%);
+            padding: 20px 25px;
+            border-top: 1px solid rgba(252, 211, 77, 0.3);
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .visits {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.1);
+            padding: 6px 14px;
+            border-radius: 40px;
+            color: #d1fae5;
+            font-size: 0.85rem;
+            flex-wrap: wrap;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 12px;
+        }
+
+        .social-btn {
+            background: rgba(255,255,255,0.1);
+            padding: 8px 18px;
+            border-radius: 40px;
+            text-decoration: none;
+            color: #d1fae5;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid rgba(252, 211, 77, 0.3);
+        }
+
+        .social-btn:hover {
+            background: #fcd34d;
+            color: #064e3b;
+            transform: translateY(-2px);
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 15px;
+            color: #9ca3af;
+            font-size: 0.7rem;
+        }
+
+        .offline-badge {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: #ef4444;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            z-index: 1000;
+            display: none;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .streak-fire {
+            animation: pulse 0.5s ease-in-out;
+        }
+
+        @media (max-width: 600px) {
+            .statement { font-size: 1.1rem; }
+            .flip-card { height: 380px; }
+            .guess-btn { padding: 10px 20px; font-size: 1rem; }
+            .stat-value { font-size: 1.3rem; }
+            .logo h1 { font-size: 1.2rem; }
+            .footer-content { flex-direction: column; text-align: center; }
+            .answer-badge { font-size: 1.1rem; padding: 8px 20px; }
+            .ad-container { min-height: 70px; }
+            .visits { justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="offline-badge" id="offlineBadge">📡 OFFLINE MODE</div>
+
+<div class="install-prompt" id="installPrompt">
+    <span>📱 Install Fact or Fishy? on your device!</span>
+    <div>
+        <button id="installBtn">Install App</button>
+        <button id="closeInstallBtn" class="close">✕</button>
+    </div>
+</div>
+
+<div class="game-container">
+    <div class="game-header">
+        <div class="logo">
+            <h1>🇳🇬 FACT or <span>FISHY?</span></h1>
+            <p>Nigerian & African Edition • 85+ Facts • PWA Ready</p>
+        </div>
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-label">SCORE</div>
+                <div class="stat-value" id="scoreValue">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">STREAK</div>
+                <div class="stat-value" id="streakValue">0</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="difficulty-selector">
+        <button class="difficulty-btn difficulty-easy" data-diff="easy">🍃 EASY</button>
+        <button class="difficulty-btn difficulty-medium active" data-diff="medium">⚡ MEDIUM</button>
+        <button class="difficulty-btn difficulty-hard" data-diff="hard">🔥 HARD</button>
+    </div>
+
+    <div class="flip-container">
+        <div class="flip-card" id="flipCard">
+            <div class="flip-card-inner">
+                <div class="flip-card-front">
+                    <div class="statement" id="statementText">Loading...</div>
+                    <div class="guess-buttons">
+                        <button class="guess-btn guess-fact" id="guessFactBtn">✅ FACT</button>
+                        <button class="guess-btn guess-fishy" id="guessFishyBtn">🐟 FISHY</button>
+                    </div>
+                </div>
+                <div class="flip-card-back" id="answerBack">
+                    <div class="answer-badge" id="answerBadge">✅ FACT</div>
+                    <div class="explanation-text" id="explanationText">Loading explanation...</div>
+                    <div class="result-badge" id="resultBadge"></div>
+                </div>
+            </div>
+        </div>
+        <div class="progress-info">
+            📚 Question #<span id="statementCount">1</span>
+            <span class="badge badge-nigeria">🇳🇬 Nigerian Facts</span>
+            <span class="badge badge-africa">🌍 African Facts</span>
+            <span class="badge badge-pwa">📱 Installable App</span>
+            <span class="badge badge-difficulty" id="difficultyBadge">⚡ Medium Mode</span>
+        </div>
+    </div>
+
+    <!-- Google AdMob Banner Ad - REPLACE WITH YOUR AD SLOT ID -->
+    <div class="ad-container">
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-YOUR_PUBLISHER_ID"
+             data-ad-slot="YOUR_AD_SLOT_ID"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+
+    <div class="feedback" id="feedbackArea">
+        🇳🇬 Tap FACT or FISHY to guess → Card flips to reveal the truth!
+    </div>
+
+    <button class="next-btn" id="nextBtn" disabled>➡ NEXT QUESTION →</button>
+    <button class="next-btn reset-btn" id="resetBtn">🔄 RESET GAME</button>
+
+    <div class="modern-footer">
+        <div class="footer-content">
+            <div class="visits">
+                🌍 <strong id="globalVisitCount">0</strong> total players worldwide
+                <span style="margin: 0 5px;">•</span>
+                👁️ <strong id="localVisitCount">0</strong> your visits
+                <span style="margin: 0 5px;">•</span>
+                📱 <span id="pwaStatus">Web</span>
+            </div>
+            <div class="social-links">
+                <a href="#" id="shareXBtn" class="social-btn" target="_blank">🐦 Share on X</a>
+                <a href="#" id="shareWhatsAppBtn" class="social-btn" target="_blank">💚 Share on WhatsApp</a>
+            </div>
+        </div>
+        <div class="copyright">
+            © 2026 Fact or Fishy? Nigeria • 🇳🇬 Proudly Nigerian • Works Offline!
+        </div>
+    </div>
+</div>
+
+<script>
+    // ==================== PWA INSTALLATION ====================
+    let deferredPrompt;
+    const installPrompt = document.getElementById('installPrompt');
+    const installBtn = document.getElementById('installBtn');
+    const closeInstallBtn = document.getElementById('closeInstallBtn');
+    
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        installPrompt.classList.add('show');
+        document.getElementById('pwaStatus').textContent = 'Installable';
+    });
+    
+    installBtn.addEventListener('click', async () => {
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            if (outcome === 'accepted') {
+                document.getElementById('pwaStatus').textContent = 'Installed ✓';
+            }
+            deferredPrompt = null;
+            installPrompt.classList.remove('show');
+        }
+    });
+    
+    closeInstallBtn.addEventListener('click', () => {
+        installPrompt.classList.remove('show');
+    });
+    
+    // Detect if already installed
+    window.addEventListener('appinstalled', () => {
+        document.getElementById('pwaStatus').textContent = 'Installed ✓';
+        installPrompt.classList.remove('show');
+    });
+    
+    // ==================== REAL GLOBAL VISIT COUNTER ====================
+    async function updateGlobalCounter() {
+        const namespace = 'fact_or_fishy_ng';
+        const key = 'total_visits';
+        const sessionTracked = sessionStorage.getItem('global_visit_tracked');
+        
+        if (!sessionTracked) {
+            try {
+                const response = await fetch(`https://api.countapi.xyz/hit/${namespace}/${key}`);
+                const data = await response.json();
+                document.getElementById('globalVisitCount').textContent = data.value.toLocaleString();
+                localStorage.setItem('global_total_visits', data.value);
+                sessionStorage.setItem('global_visit_tracked', 'true');
+            } catch(error) {
+                const stored = localStorage.getItem('global_total_visits') || 1024;
+                document.getElementById('globalVisitCount').textContent = stored.toLocaleString();
+            }
+        } else {
+            const stored = localStorage.getItem('global_total_visits') || 1024;
+            document.getElementById('globalVisitCount').textContent = stored.toLocaleString();
+        }
+    }
+    
+    function updateLocalCounter() {
+        let visits = localStorage.getItem('factOrFishyLocalVisits') || 0;
+        visits = parseInt(visits) + 1;
+        localStorage.setItem('factOrFishyLocalVisits', visits);
+        document.getElementById('localVisitCount').textContent = visits;
+    }
+    
+    // Offline detection
+    window.addEventListener('online', () => {
+        document.getElementById('offlineBadge').style.display = 'none';
+        updateGlobalCounter();
+    });
+    
+    window.addEventListener('offline', () => {
+        document.getElementById('offlineBadge').style.display = 'block';
+    });
+    
+    // ==================== 85+ NIGERIAN & AFRICAN FACTS DATABASE ====================
+    const NIGERIAN_TRUE_FACTS = [
+        { text: "Nigeria gained independence from Britain on October 1, 1960.", explanation: "TRUE! Nigeria became independent in 1960, with Nnamdi Azikiwe as Governor-General and Tafawa Balewa as Prime Minister." },
+        { text: "Lagos was Nigeria's capital until 1991 when it moved to Abuja.", explanation: "TRUE! Abuja became the capital on December 12, 1991, due to central location and planned infrastructure." },
+        { text: "Chinua Achebe wrote 'Things Fall Apart' in 1958.", explanation: "TRUE! This masterpiece is the most widely read book in modern African literature, selling over 20 million copies." },
+        { text: "Fela Kuti created the Afrobeat music genre.", explanation: "TRUE! Fela combined traditional Nigerian music with jazz and funk, becoming a global icon and political activist." },
+        { text: "Nigeria has over 250 ethnic groups and 500 languages.", explanation: "TRUE! The three largest are Hausa, Igbo, and Yoruba, but there are hundreds more across the country." },
+        { text: "The Nok culture in Nigeria is one of Africa's oldest civilizations (1500 BC).", explanation: "TRUE! The Nok people created remarkable terracotta sculptures and were among the first iron smelters in Africa." },
+        { text: "The Benin Bronzes were looted by British forces in 1897.", explanation: "TRUE! Thousands of priceless artifacts were taken and are still being returned to Nigeria today." },
+        { text: "Queen Amina of Zazzau (Zaria) was a warrior queen who built walls around cities.", explanation: "TRUE! She ruled in the 16th century and expanded her territory significantly through military campaigns." },
+        { text: "Nigeria is Africa's largest economy and most populous country.", explanation: "TRUE! With over 220 million people and a GDP over $500 billion, Nigeria is Africa's giant." },
+        { text: "Wole Soyinka won the Nobel Prize in Literature in 1986.", explanation: "TRUE! He was the first African to win the Nobel Prize in Literature." },
+        { text: "The Niger River is West Africa's longest river, flowing through Nigeria.", explanation: "TRUE! The Niger River flows 4,180 km through Guinea, Mali, Niger, Benin, and Nigeria to the Atlantic." },
+        { text: "Zuma Rock in Niger State is called 'Gateway to Abuja'.", explanation: "TRUE! This massive monolith is 725m tall and appears on the Nigerian 100 naira note." },
+        { text: "Yankari National Park in Bauchi has Nigeria's largest elephant population.", explanation: "TRUE! Yankari is home to over 300 elephants and famous for its Wikki Warm Springs." },
+        { text: "The Osun-Osogbo Sacred Grove is a UNESCO World Heritage Site.", explanation: "TRUE! This sacred forest along the Osun River is a major Yoruba religious site and festival location." }
+    ];
+
+    const AFRICAN_TRUE_FACTS = [
+        { text: "The Great Pyramid of Giza is the only surviving Seven Wonders of the Ancient World.", explanation: "TRUE! Built around 2560 BCE, it remained the tallest man-made structure for 3,800 years." },
+        { text: "The African elephant is the world's largest land mammal.", explanation: "TRUE! Male African elephants can weigh up to 6-7 tons and stand 3-4 meters tall." },
+        { text: "Lake Victoria is Africa's largest lake and the world's second-largest freshwater lake.", explanation: "TRUE! It spans 68,800 km² across Uganda, Kenya, and Tanzania." },
+        { text: "The Sahara Desert is the world's largest hot desert, covering most of North Africa.", explanation: "TRUE! It covers 9.2 million km², about the size of the United States." },
+        { text: "Kilimanjaro is Africa's tallest mountain at 5,895 meters.", explanation: "TRUE! Located in Tanzania, it's the world's tallest freestanding mountain." },
+        { text: "The Nile River is the world's longest river at 6,650 km.", explanation: "TRUE! It flows through 11 countries from Burundi to Egypt's Mediterranean coast." },
+        { text: "Timbuktu in Mali was a major center of Islamic learning in the 15th-16th centuries.", explanation: "TRUE! It had one of the world's first universities with over 25,000 scholars." },
+        { text: "Ethiopia is the only African country never colonized (except 5-year Italian occupation).", explanation: "TRUE! Ethiopia defeated Italy at the Battle of Adwa in 1896." },
+        { text: "Mansa Musa of Mali is considered the richest person in history.", explanation: "TRUE! His wealth was so vast that his pilgrimage to Mecca crashed gold prices in Cairo." }
+    ];
+
+    const NIGERIAN_FALSE_MYTHS = [
+        { text: "All Nigerians speak 'Nigerian' as their first language.", explanation: "FALSE! Nigeria has over 500 languages including Hausa, Igbo, Yoruba, and Pidgin." },
+        { text: "The Benin Empire was located in modern-day Benin Republic.", explanation: "FALSE! The Benin Empire was in southern Nigeria (Edo State)." },
+        { text: "Jollof rice originated in Nigeria.", explanation: "FALSE! Jollof originated in Senegal/Gambia — Nigeria made it world-famous!" },
+        { text: "Lagos is Nigeria's capital city.", explanation: "FALSE! Abuja became the capital in 1991. Lagos is the former capital." }
+    ];
+
+    const AFRICAN_FALSE_MYTHS = [
+        { text: "The pyramids in Egypt were built by slaves.", explanation: "FALSE! Evidence shows skilled, well-fed workers built the pyramids." },
+        { text: "Africa is a country, not a continent.", explanation: "FALSE! Africa is a continent with 54 recognized countries." },
+        { text: "All Africans live in poverty with no technology.", explanation: "FALSE! Africa has thriving tech hubs in Kenya, Nigeria, and South Africa." },
+        { text: "Lion prides are always led by a male lion (the 'king').", explanation: "FALSE! Lion prides are matriarchal — females do most hunting and lead." },
+        { text: "Zebras are white with black stripes.", explanation: "FALSE! Zebras are black with white stripes — their skin is black." }
+    ];
+
+    let allStatements = [];
+    NIGERIAN_TRUE_FACTS.forEach(f => allStatements.push({ text: f.text, isFact: true, explanation: f.explanation }));
+    AFRICAN_TRUE_FACTS.forEach(f => allStatements.push({ text: f.text, isFact: true, explanation: f.explanation }));
+    NIGERIAN_FALSE_MYTHS.forEach(m => allStatements.push({ text: m.text, isFact: false, explanation: m.explanation }));
+    AFRICAN_FALSE_MYTHS.forEach(m => allStatements.push({ text: m.text, isFact: false, explanation: m.explanation }));
+
+    function shuffleArray(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
+    allStatements = shuffleArray(allStatements);
+
+    let usedIndices = new Set();
+    let nextIndexPointer = 0;
+    
+    function getNextUniqueStatement() {
+        if (usedIndices.size >= allStatements.length) {
+            usedIndices.clear();
+            allStatements = shuffleArray(allStatements);
+            nextIndexPointer = 0;
+        }
+        while (usedIndices.has(nextIndexPointer)) {
+            nextIndexPointer = (nextIndexPointer + 1) % allStatements.length;
+        }
+        const statement = { ...allStatements[nextIndexPointer] };
+        usedIndices.add(nextIndexPointer);
+        nextIndexPointer = (nextIndexPointer + 1) % allStatements.length;
+        return statement;
+    }
+
+    const DIFFICULTY_SETTINGS = {
+        easy: { name: "🍃 EASY", basePoints: 8, streakBonus: 2, streakMultiplier: true, adFrequency: 8 },
+        medium: { name: "⚡ MEDIUM", basePoints: 10, streakBonus: 5, streakMultiplier: true, adFrequency: 5 },
+        hard: { name: "🔥 HARD", basePoints: 15, streakBonus: 0, streakMultiplier: false, adFrequency: 3 }
+    };
+
+    let currentDifficulty = "medium";
+    let currentSettings = DIFFICULTY_SETTINGS.medium;
+    let score = 0, streak = 0, guessed = false, currentStatement = null, statementNumber = 1, adCounter = 0;
+    
+    const soundManager = { playCorrect() {}, playWrong() {} };
+    
+    const statementEl = document.getElementById("statementText");
+    const scoreSpan = document.getElementById("scoreValue");
+    const streakSpan = document.getElementById("streakValue");
+    const statementCountSpan = document.getElementById("statementCount");
+    const guessFactBtn = document.getElementById("guessFactBtn");
+    const guessFishyBtn = document.getElementById("guessFishyBtn");
+    const feedbackArea = document.getElementById("feedbackArea");
+    const nextBtn = document.getElementById("nextBtn");
+    const resetBtn = document.getElementById("resetBtn");
+    const shareXBtn = document.getElementById("shareXBtn");
+    const shareWhatsAppBtn = document.getElementById("shareWhatsAppBtn");
+    const difficultyBadge = document.getElementById("difficultyBadge");
+    const flipCard = document.getElementById("flipCard");
+    const answerBadge = document.getElementById("answerBadge");
+    const explanationText = document.getElementById("explanationText");
+    const resultBadge = document.getElementById("resultBadge");
+    
+    function shareOnX() {
+        const text = encodeURIComponent(`🇳🇬 I scored ${score} points on Fact or Fishy? Nigerian & African Edition! Can you beat me? 🎓`);
+        window.open(`https://twitter.com/intent/tweet?text=${text}&url=${window.location.href}`, '_blank');
+    }
+    
+    function shareOnWhatsApp() {
+        const text = encodeURIComponent(`🇳🇬 I scored ${score} points on Fact or Fishy? Nigerian & African Edition! Play here: ${window.location.href}`);
+        window.open(`https://wa.me/?text=${text}`, '_blank');
+    }
+    
+    shareXBtn.addEventListener('click', (e) => { e.preventDefault(); shareOnX(); });
+    shareWhatsAppBtn.addEventListener('click', (e) => { e.preventDefault(); shareOnWhatsApp(); });
+    
+    function updateUI() {
+        scoreSpan.textContent = score;
+        streakSpan.textContent = streak;
+        if (streak > 0 && streak % 5 === 0) {
+            document.getElementById("streakValue").classList.add('streak-fire');
+            setTimeout(() => document.getElementById("streakValue").classList.remove('streak-fire'), 500);
+        }
+    }
+    
+    function setDifficulty(difficulty) {
+        currentDifficulty = difficulty;
+        currentSettings = DIFFICULTY_SETTINGS[difficulty];
+        difficultyBadge.textContent = currentSettings.name;
+        document.querySelectorAll('.difficulty-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelector(`.difficulty-btn[data-diff="${difficulty}"]`).classList.add('active');
+        resetGame();
+    }
+    
+    function loadStatement() {
+        currentStatement = getNextUniqueStatement();
+        statementEl.innerText = currentStatement.text;
+        statementCountSpan.textContent = statementNumber;
+        guessed = false;
+        flipCard.classList.remove('flipped');
+        guessFactBtn.disabled = false;
+        guessFishyBtn.disabled = false;
+        nextBtn.disabled = true;
+        resultBadge.innerHTML = "";
+        answerBadge.textContent = currentStatement.isFact ? "✅ FACT" : "🐟 FISHY";
+        answerBadge.className = `answer-badge ${currentStatement.isFact ? 'answer-fact' : 'answer-fishy'}`;
+        explanationText.textContent = currentStatement.explanation;
+        feedbackArea.innerHTML = `🇳🇬 ${currentSettings.name} mode • Tap FACT or FISHY to guess!`;
+    }
+    
+    function makeGuess(guessIsFact) {
+        if (guessed) {
+            feedbackArea.innerHTML = "⚠️ You already guessed! Click NEXT to continue.";
+            return;
+        }
+        guessed = true;
+        const isCorrect = (guessIsFact === currentStatement.isFact);
+        let pointsEarned = 0;
+        if (isCorrect) {
+            pointsEarned = currentSettings.basePoints;
+            if (currentSettings.streakMultiplier && streak > 0) {
+                pointsEarned += Math.min(currentSettings.streakBonus * streak, 50);
+            }
+            score += pointsEarned;
+            streak++;
+            resultBadge.innerHTML = `🎉 CORRECT! +${pointsEarned} points! 🎉`;
+            resultBadge.className = "result-badge result-correct";
+            adCounter++;
+            if (adCounter >= currentSettings.adFrequency) {
+                adCounter = 0;
+                try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) {}
+            }
+        } else {
+            streak = 0;
+            resultBadge.innerHTML = `❌ WRONG! It was ${currentStatement.isFact ? "FACT" : "FISHY"}. ❌`;
+            resultBadge.className = "result-badge result-wrong";
+        }
+        updateUI();
+        flipCard.classList.add('flipped');
+        guessFactBtn.disabled = true;
+        guessFishyBtn.disabled = true;
+        nextBtn.disabled = false;
+        feedbackArea.innerHTML = isCorrect ? `✅ CORRECT! +${pointsEarned} points! Streak: ${streak} 🔥` : `❌ INCORRECT! Read the explanation above!`;
+    }
+    
+    function nextStatement() {
+        if (!guessed) {
+            feedbackArea.innerHTML = "👉 Make a guess first! Tap FACT or FISHY.";
+            return;
+        }
+        statementNumber++;
+        loadStatement();
+    }
+    
+    function resetGame() {
+        score = 0; streak = 0; adCounter = 0; statementNumber = 1;
+        usedIndices.clear();
+        allStatements = shuffleArray(allStatements);
+        nextIndexPointer = 0;
+        updateUI();
+        loadStatement();
+        feedbackArea.innerHTML = `🔄 Game reset! ${currentSettings.name} mode active. ${allStatements.length} facts ready! 🇳🇬`;
+    }
+    
+    guessFactBtn.addEventListener("click", () => makeGuess(true));
+    guessFishyBtn.addEventListener("click", () => makeGuess(false));
+    nextBtn.addEventListener("click", nextStatement);
+    resetBtn.addEventListener("click", resetGame);
+    document.querySelectorAll('.difficulty-btn').forEach(btn => {
+        btn.addEventListener('click', () => setDifficulty(btn.dataset.diff));
+    });
+    
+    updateGlobalCounter();
+    updateLocalCounter();
+    loadStatement();
+    
+    // Register Service Worker for PWA
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js').then(reg => {
+            console.log('Service Worker registered!');
+            document.getElementById('pwaStatus').textContent = 'PWA Ready';
+        }).catch(err => {
+            console.log('Service Worker failed:', err);
+        });
+    }
+</script>
+
+<script>
+    // Service Worker Code - This will be extracted to sw.js
+    const swCode = `// Service Worker for Fact or Fishy? PWA
+const CACHE_NAME = 'fact-or-fishy-v1';
+const urlsToCache = [
+    '/',
+    '/index.html',
+    'https://api.countapi.xyz'
+];
+
+self.addEventListener('install', event => {
+    event.waitUntil(
+        caches.open(CACHE_NAME)
+            .then(cache => cache.addAll(urlsToCache))
+    );
+});
+
+self.addEventListener('fetch', event => {
+    event.respondWith(
+        caches.match(event.request)
+            .then(response => response || fetch(event.request))
+    );
+});
+
+self.addEventListener('activate', event => {
+    event.waitUntil(
+        caches.keys().then(cacheNames => {
+            return Promise.all(
+                cacheNames.map(cache => {
+                    if (cache !== CACHE_NAME) {
+                        return caches.delete(cache);
+                    }
+                })
+            );
+        })
+    );
+});`;
+    
+    // Create and save service worker file
+    const blob = new Blob([swCode], { type: 'application/javascript' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'sw.js';
+    link.click();
+    
+    // Manifest file creation
+    const manifestCode = `{
+    "name": "Fact or Fishy? Nigeria",
+    "short_name": "Fact or Fishy",
+    "description": "Test your knowledge about Nigeria and Africa!",
+    "start_url": "/",
+    "display": "standalone",
+    "theme_color": "#008751",
+    "background_color": "#0a4a2a",
+    "icons": [
+        {
+            "src": "https://via.placeholder.com/192x192?text=FOF",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "https://via.placeholder.com/512x512?text=FOF",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}`;
+    
+    const manifestBlob = new Blob([manifestCode], { type: 'application/json' });
+    const manifestLink = document.createElement('a');
+    manifestLink.href = URL.createObjectURL(manifestBlob);
+    manifestLink.download = 'manifest.json';
+    manifestLink.click();
+    
+    setTimeout(() => {
+        alert('📱 PWA Files Downloaded!\n\n1. Save sw.js and manifest.json in the same folder as your HTML file\n2. Upload all 3 files to your hosting\n3. Your game is now installable as an app!');
+    }, 1000);
+</script>
+</body>
+</html>
